@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { useTypewriter } from '../hooks/useTypewriter'
 import { boop } from '../audio/codecVoice'
 
@@ -9,6 +9,8 @@ interface CodecProps {
   avatar: string
   /** The line currently being spoken. Changing it restarts the typing. */
   line: string
+  /** Called when the line finishes typing (boops have stopped). */
+  onLineComplete?: () => void
   /** The reply area. Varies per stage: choices now, mic/voice later. */
   children?: ReactNode
 }
@@ -20,12 +22,20 @@ const BOOPABLE = /[a-z0-9]/i
  * The conversational frame: speaker portrait + typewriter speech on top,
  * a reply slot below. The reply slot is revealed once the line finishes.
  */
-export function Codec({ speaker, avatar, line, children }: CodecProps) {
+export function Codec({ speaker, avatar, line, onLineComplete, children }: CodecProps) {
   const { displayed, done, skip } = useTypewriter(line, {
     onChar: (ch) => {
       if (BOOPABLE.test(ch)) boop()
     },
   })
+
+  // Fire when the line finishes typing; `done` resets to false when the line
+  // changes, so this runs once per line.
+  const onCompleteRef = useRef(onLineComplete)
+  onCompleteRef.current = onLineComplete
+  useEffect(() => {
+    if (done) onCompleteRef.current?.()
+  }, [done])
 
   return (
     <div className="codec">

@@ -22,6 +22,8 @@ interface Options {
   calibrationMs?: number
   /** Narrow-band radio format applied to the recording. */
   radio?: RadioFormat
+  /** When false, the recorder stays idle (e.g. while the prompt is still typing). */
+  enabled?: boolean
 }
 
 type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext }
@@ -42,6 +44,7 @@ export function useUtteranceRecorder({
   maxMs = 6000,
   calibrationMs = 600,
   radio = DEFAULT_RADIO,
+  enabled = true,
 }: Options) {
   const [phase, setPhase] = useState<RecorderPhase>('idle')
   const [clip, setClip] = useState<Clip | null>(null)
@@ -58,7 +61,7 @@ export function useUtteranceRecorder({
   }
 
   useEffect(() => {
-    if (!stream) {
+    if (!stream || !enabled) {
       setPhase('idle')
       return
     }
@@ -173,7 +176,7 @@ export function useUtteranceRecorder({
       source.disconnect()
       void ctx.close()
     }
-  }, [stream, runId, threshold, silenceMs, maxMs, calibrationMs, radio])
+  }, [stream, runId, threshold, silenceMs, maxMs, calibrationMs, radio, enabled])
 
   return { phase, levelRef, clip, radio, error, reset }
 }

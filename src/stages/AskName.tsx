@@ -14,7 +14,10 @@ import { setNameSample } from '../audio/nameSample'
 // lets you mangle the clip with a kit of degradation effects and play back.
 export function AskName({ advance, goTo }: StageProps) {
   const stream = getMicStream()
-  const { phase, levelRef, clip, radio, error, reset } = useUtteranceRecorder({ stream })
+  // Don't listen until the prompt has finished typing — the codec boops feed
+  // back into the mic and would otherwise be heard as speech.
+  const [armed, setArmed] = useState(false)
+  const { phase, levelRef, clip, radio, error, reset } = useUtteranceRecorder({ stream, enabled: armed })
 
   const [effectId, setEffectId] = useState('clean')
   const [url, setUrl] = useState<string | null>(null)
@@ -40,6 +43,7 @@ export function AskName({ advance, goTo }: StageProps) {
 
   const reRecord = () => {
     setEffectId('clean')
+    setArmed(false)
     reset()
   }
 
@@ -60,7 +64,12 @@ export function AskName({ advance, goTo }: StageProps) {
         : "What's your name? Say it out loud."
 
   return (
-    <Codec speaker="Chattercat" avatar={phase === 'done' ? '😺' : '🐱'} line={line}>
+    <Codec
+      speaker="Chattercat"
+      avatar={phase === 'done' ? '😺' : '🐱'}
+      line={line}
+      onLineComplete={() => setArmed(true)}
+    >
       {!stream ? (
         <ReplyChoices choices={[{ label: '← Reconnect mic', onSelect: () => goTo('mic') }]} />
       ) : phase === 'done' && clip && url ? (

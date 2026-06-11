@@ -3,6 +3,7 @@ import { AudioGate } from './game/AudioGate'
 import { StageHost } from './game/StageHost'
 import { Complete } from './game/Complete'
 import { VolumeControl } from './components/VolumeControl'
+import { DevMenu } from './components/DevMenu'
 import { STAGES, pathForIndex } from './game/stages'
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <AudioGate>
         <VolumeControl />
+        <DevMenu />
         <Routes>
           <Route path="/" element={<Navigate to={pathForIndex(0)} replace />} />
           {STAGES.map((stage, i) => (

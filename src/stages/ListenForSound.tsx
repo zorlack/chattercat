@@ -15,13 +15,15 @@ export function ListenForSound({ advance, goTo }: StageProps) {
   const { levelRef, holdRef, thresholdNorm } = useSoundDetector({
     stream,
     onDetect: () => setHeard(true),
+    // Hold the sound for a beat — it's funnier when you have to sustain it.
+    holdMs: 1000,
   })
 
   const line = !stream
     ? "Hmm, I lost the mic connection. Let's go back and reconnect."
     : heard
       ? 'I heard that! Loud and clear. Nice work, friendo.'
-      : 'Now make some noise — and hold it above the line for half a second!'
+      : 'Now make some noise — and hooold it above the line! Keep going…'
 
   return (
     <Codec speaker="Chattercat" avatar={heard ? '😺' : '🐱'} line={line}>
