@@ -106,6 +106,33 @@ body {
   animation: blink 0.9s steps(2, start) infinite;
 }
 
+.codec__phrase {
+  margin: 0.5rem 0 0;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.codec__hint {
+  display: block;
+  margin-top: 0.4rem;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--accent);
+  animation: hintpop 0.25s ease-out;
+}
+
+@keyframes hintpop {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---- Reply area (varies per stage) ---- */
 .codec__reply {
   padding: 1rem 1.1rem;
@@ -379,6 +406,104 @@ button.boot__answer:hover {
   width: 90px;
   accent-color: var(--accent);
   cursor: pointer;
+}
+
+/* ---- Tone calibration circles ---- */
+.tones {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.tone {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-dim);
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.tone:hover {
+  border-color: var(--accent);
+}
+
+.tone__fill {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  background: var(--accent-dim);
+}
+
+.tone__label {
+  position: relative;
+  z-index: 1;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.tone--done {
+  border-color: var(--accent);
+}
+
+.tone--done .tone__fill {
+  background: var(--accent);
+}
+
+.tone--done .tone__label {
+  color: #0c1410;
+}
+
+/* Button-height ToneChallenge: sing to continue. */
+.tonebar {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tonebar:hover {
+  border-color: var(--accent);
+}
+
+.tonebar__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: var(--accent-dim);
+}
+
+.tonebar__label {
+  position: relative;
+  z-index: 1;
+  font-size: 0.9rem;
+}
+
+.tonebar--done .tonebar__fill {
+  background: var(--accent);
+}
+
+.tonebar--done .tonebar__label {
+  color: #0c1410;
 }
 
 /* ---- Hidden dev menu (Ctrl+D) ---- */

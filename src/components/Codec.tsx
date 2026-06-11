@@ -11,6 +11,10 @@ interface CodecProps {
   line: string
   /** Called when the line finishes typing (boops have stopped). */
   onLineComplete?: () => void
+  /** Ephemeral coaching line under the main one; doesn't reset the typewriter. */
+  hint?: string
+  /** An emphasized phrase the player should say, shown bold on its own line. */
+  phrase?: string
   /** The reply area. Varies per stage: choices now, mic/voice later. */
   children?: ReactNode
 }
@@ -22,7 +26,7 @@ const BOOPABLE = /[a-z0-9]/i
  * The conversational frame: speaker portrait + typewriter speech on top,
  * a reply slot below. The reply slot is revealed once the line finishes.
  */
-export function Codec({ speaker, avatar, line, onLineComplete, children }: CodecProps) {
+export function Codec({ speaker, avatar, line, onLineComplete, hint, phrase, children }: CodecProps) {
   const { displayed, done, skip } = useTypewriter(line, {
     onChar: (ch) => {
       if (BOOPABLE.test(ch)) boop()
@@ -49,6 +53,12 @@ export function Codec({ speaker, avatar, line, onLineComplete, children }: Codec
             {displayed}
             {!done && <span className="codec__caret">▍</span>}
           </p>
+          {phrase && <p className="codec__phrase">“{phrase}”</p>}
+          {hint && (
+            <span className="codec__hint" key={hint}>
+              {hint}
+            </span>
+          )}
         </div>
       </div>
 

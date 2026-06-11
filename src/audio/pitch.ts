@@ -5,8 +5,9 @@
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 // Estimate the fundamental of one frame, constrained to the voice range
-// (≈60–600 Hz). Returns Hz, or -1 if too quiet / no clear period.
-function autoCorrelate(buf: Float32Array, sampleRate: number): number {
+// (≈60–600 Hz). Returns Hz, or -1 if too quiet / no clear period. Exported for
+// live (per-frame) pitch tracking.
+export function autoCorrelate(buf: Float32Array, sampleRate: number): number {
   const n = buf.length
   let rms = 0
   for (let i = 0; i < n; i++) rms += buf[i] * buf[i]
